@@ -66,19 +66,23 @@ function FacesFormField<T extends FieldValues>({
       name={name}
       render={({ field }) => (
         <FormItem className="space-y-6">
-          <FormLabel className="font-extrabold text-2xl text-purple-500 italic">{label}</FormLabel>
+          <FormLabel className="text-lg font-extrabold italic text-purple-500 md:text-2xl">
+            {label}
+          </FormLabel>
           <FormControl>
             <RadioGroup
               onValueChange={field.onChange}
               defaultValue={field.value}
-              className="flex justify-between"
+              className="flex flex-col justify-between md:flex-row"
             >
               {Radios.map((radio) => (
                 <FormItem
-                  className="flex flex-col items-center justify-center space-x-3 gap-1 text-center"
+                  className="flex flex-col items-center justify-center gap-1 space-x-3 text-center"
                   key={radio.value}
                 >
-                  <FormLabel className="font-bold text-xl text-purple-500">{radio.label}</FormLabel>
+                  <FormLabel className="mb-0 text-base font-bold !leading-normal text-purple-500 md:text-xl">
+                    {radio.label}
+                  </FormLabel>
                   <Image
                     src={radio.icon}
                     alt={radio.label}
@@ -86,7 +90,7 @@ function FacesFormField<T extends FieldValues>({
                     height={100}
                   />
                   <FormControl>
-                    <RadioGroupItem value={radio.value} className="mx-auto"/>
+                    <RadioGroupItem value={radio.value} className="mx-auto" />
                   </FormControl>
                 </FormItem>
               ))}
