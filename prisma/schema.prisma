@@ -1,49 +1,130 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
     provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "mysql"
-    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-    // Further reading:
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-    url      = env("DATABASE_URL")
+    provider     = "mysql"
+    url          = env("DATABASE_URL")
+    relationMode = "prisma"
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model Store {
+    id               String          @id @default(cuid())
+    googleBusinessId String?
+    slug             String?
+    title            String
+    city             String
+    country          String
+    description      String?         @db.VarChar(4096)
+    email            String?
+    isDisabled       Boolean         @default(false)
+    lat              Decimal
+    lng              Decimal
+    phone            String?
+    postal_code      String
+    state            String?
+    street           String
+    deliveryLink     DeliveryLinks[]
+    authorId         String?
+    author           User?           @relation(fields: [authorId], references: [id])
+    createdAt        DateTime        @default(now())
+    updatedAt        DateTime        @updatedAt
+    createdBy        String?
+    updatedBy        String?
+    images           StoreImages[]
+    layoutType       String          @default("0")
+    isComingSoon     Boolean         @default(false)
+    couponId         String?
+    CouponStore      CouponStore[]
+    MenuStore        MenuStore[]
 
-    createdBy   User   @relation(fields: [createdById], references: [id])
-    createdById String
-
-    @@index([name])
+    @@index([authorId])
 }
 
-// Necessary for Next auth
+model ExcludedStoresLog {
+    id            String   @id @default(cuid())
+    storeName     String
+    storeLocation String
+    excludedBy    String
+    exclusionDate DateTime @default(now())
+}
+
+model Coupon {
+    id              String        @id @default(cuid())
+    slug            String        @unique
+    title           String
+    description     String
+    couponCode      String        @unique
+    createdAt       DateTime      @default(now())
+    isDisabled      Boolean       @default(false)
+    updatedAt       DateTime      @updatedAt
+    createdBy       String?
+    updatedBy       String?
+    startDate       DateTime?
+    endDate         DateTime?
+    discountType    String
+    fixedValue      String?
+    percentageValue String?
+    couponSmallText String?
+    type            CouponType?   @default(STORECOUPON)
+    CouponStore     CouponStore[]
+}
+
+enum CouponType {
+    STORECOUPON
+    NORMALCOUPON
+}
+
+model CouponStore {
+    coupon   Coupon @relation(fields: [couponId], references: [id])
+    couponId String
+    store    Store  @relation(fields: [storeId], references: [id])
+    storeId  String
+
+    @@id([couponId, storeId])
+    @@index([couponId])
+    @@index([storeId])
+}
+
+model DeliveryLinks {
+    id      String @id @default(cuid())
+    title   String
+    link    String @db.VarChar(4096)
+    store   Store  @relation(fields: [storeId], references: [id])
+    storeId String
+
+    @@index([storeId])
+}
+
+model StoreImages {
+    id      String  @id @default(cuid())
+    fileUrl String  @db.VarChar(4096)
+    role    String?
+
+    Store   Store?  @relation(fields: [storeId], references: [id])
+    storeId String?
+
+    @@index([storeId])
+}
+
 model Account {
-    id                       String  @id @default(cuid())
-    userId                   String
-    type                     String
-    provider                 String
-    providerAccountId        String
-    refresh_token            String? @db.Text
-    access_token             String? // @db.Text
-    expires_at               Int?
-    token_type               String?
-    scope                    String?
-    id_token                 String? // @db.Text
-    session_state            String?
-    user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-    refresh_token_expires_in Int?
+    id                String  @id @default(cuid())
+    userId            String
+    type              String
+    provider          String
+    providerAccountId String
+    refresh_token     String? @db.Text
+    access_token      String? @db.Text
+    expires_at        Int?
+    token_type        String?
+    scope             String?
+    id_token          String? @db.Text
+    session_state     String?
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([provider, providerAccountId])
+    @@index([userId])
 }
 
 model Session {
@@ -52,17 +133,20 @@ model Session {
     userId       String
     expires      DateTime
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId])
 }
 
 model User {
     id            String    @id @default(cuid())
     name          String?
+    username      String?
     email         String?   @unique
     emailVerified DateTime?
     image         String?
     accounts      Account[]
     sessions      Session[]
-    posts         Post[]
+    Store         Store[]
 }
 
 model VerificationToken {
@@ -71,4 +155,71 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model MenuStore {
+    menu    Menu   @relation(fields: [menuId], references: [id])
+    store   Store  @relation(fields: [storeId], references: [id])
+    storeId String
+    menuId  String
+
+    @@id([menuId, storeId])
+    @@index([menuId])
+    @@index([storeId])
+}
+
+model Menu {
+    id         String      @id @default(cuid())
+    title      String
+    slug       String      @unique
+    categories Category[]
+    MenuStore  MenuStore[]
+}
+
+model Category {
+    id     Int    @id @default(autoincrement())
+    title  String
+    menuId String
+    menu   Menu   @relation(fields: [menuId], references: [id])
+    items  Item[]
+
+    @@index([menuId])
+}
+
+model Item {
+    id         Int      @id @default(autoincrement())
+    title      String
+    categoryId Int
+    category   Category @relation(fields: [categoryId], references: [id])
+    details    Json?
+
+    @@index([categoryId])
+}
+
+model Product {
+    id                String           @id @default(cuid())
+    title             String
+    subtitle          String?
+    ingredients       String?          @db.Text
+    size              String
+    calories          String
+    thumbUrl          String           @db.Text
+    imageUrl          String           @db.Text
+    sideImageUrl      String?          @db.Text
+    details           Json?
+    nutritionFacts    String           @db.VarChar(4096)
+    sidebarText       String?          @db.Text
+    ProductCategory   ProductCategory? @relation(fields: [productCategoryId], references: [id])
+    productCategoryId Int?
+
+    @@index([productCategoryId])
+}
+
+model ProductCategory {
+    id          Int       @id @default(autoincrement())
+    title       String
+    description String
+    locale      String?
+    order       Int?
+    products    Product[]
 }
