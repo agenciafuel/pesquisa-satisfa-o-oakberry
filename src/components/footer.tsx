@@ -6,12 +6,12 @@ import GlobeIcon from "../assets/globeIcon.svg";
 function Footer() {
   return (
     <footer>
-      <div className="bg-offWhite-500 relative z-30 grid grid-cols-3 py-10 lg:px-20 ">
+      <div className="relative z-30 grid grid-cols-3 bg-offWhite-500 py-10 lg:px-20">
         <div>
           <Image
             src={Airplane}
             alt={"airplane-alt"}
-            className="animate-floatingPlane z-30 hidden select-none lg:block"
+            className="z-30 hidden animate-floatingPlane select-none lg:block"
             loading="lazy"
           />
         </div>
@@ -24,7 +24,6 @@ function Footer() {
           />
         </div>
       </div>
-
     </footer>
   );
 }

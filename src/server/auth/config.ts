@@ -1,6 +1,6 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { type DefaultSession, type NextAuthConfig } from "next-auth";
-import DiscordProvider from "next-auth/providers/discord";
+import Google from "next-auth/providers/google";
 
 import { db } from "@/server/db";
 
@@ -31,8 +31,19 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authConfig = {
+  pages:{
+    signIn: "/auth/signin"
+  },
+  secret: process.env.AUTH_SECRET,
+  session: {
+    strategy: "jwt"
+  },
   providers: [
-    DiscordProvider,
+    Google({
+      clientId: process.env.AUTH_GOOGLE_ID,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET,
+      allowDangerousEmailAccountLinking: true,
+    }),
     /**
      * ...add more providers here.
      *
@@ -49,8 +60,20 @@ export const authConfig = {
       ...session,
       user: {
         ...session.user,
-        id: user.id,
       },
     }),
+    // async signIn({ user }) {
+    //   if (
+    //     user?.email?.endsWith("@oakberry.com") ||
+    //     user?.email?.endsWith("@agenciafuel.com.br")
+    //   ) {
+    //     return true;
+    //   } else {
+    //     return false;
+    //   }
+    // },
+    authorized: async ({ auth }) => {
+      return !!auth
+    },
   },
 } satisfies NextAuthConfig;

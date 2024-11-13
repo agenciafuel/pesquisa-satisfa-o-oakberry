@@ -1,6 +1,5 @@
 import "@/styles/globals.css";
 
-
 import { type Metadata } from "next";
 
 import { TRPCReactProvider } from "@/trpc/react";
@@ -16,7 +15,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${nexaSlab.variable}`}>
+    <html lang="en" className={`${nexaSlab.variable}`} suppressHydrationWarning>
       <body>
         <TRPCReactProvider>{children}</TRPCReactProvider>
       </body>

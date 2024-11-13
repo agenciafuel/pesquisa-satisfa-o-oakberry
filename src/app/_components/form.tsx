@@ -20,39 +20,18 @@ const formSchema = z.object({
   recommendationScore: z
     .string()
     .min(1, { message: "Por favor, selecione uma opção" }),
-  qualityOfService: z
-    .enum(["Muito Bom", "Bom", "Regular", "Ruim", "Muito Ruim"], {
-      message: "Por favor, selecione uma opção",
-    })
-    .optional()
-    .refine((value) => value !== undefined, {
-      message: "Por favor, selecione uma opção",
-    }),
-  productVariety: z
-    .enum(["Muito Bom", "Bom", "Regular", "Ruim", "Muito Ruim"], {
-      message: "Por favor, selecione uma opção",
-    })
-    .optional()
-    .refine((value) => value !== undefined, {
-      message: "Por favor, selecione uma opção",
-    }),
-  productPricing: z
-    .enum(["Muito Bom", "Bom", "Regular", "Ruim", "Muito Ruim"], {
-      message: "Por favor, selecione uma opção",
-    })
-    .optional()
-    .refine((value) => value !== undefined, {
-      message: "Por favor, selecione uma opção",
-    }),
-
-  bowlOrSmoothieAssembly: z
-    .enum(["Muito Bom", "Bom", "Regular", "Ruim", "Muito Ruim"], {
-      message: "Por favor, selecione uma opção",
-    })
-    .optional()
-    .refine((value) => value !== undefined, {
-      message: "Por favor, selecione uma opção",
-    }),
+  qualityOfService: z.string().min(1, {
+    message: "Por favor, selecione uma opção",
+  }),
+  productVariety: z.string().min(1, {
+    message: "Por favor, selecione uma opção",
+  }),
+  productPricing: z.string().min(1, {
+    message: "Por favor, selecione uma opção",
+  }),
+  bowlOrSmoothieAssembly: z.string().min(1, {
+    message: "Por favor, selecione uma opção",
+  }),
   improvementSuggestions: z.string().min(1, {
     message: "Por favor, escreva alguma sugestão de melhoria.",
   }),
@@ -64,10 +43,10 @@ function Form() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      qualityOfService: undefined,
-      productVariety: undefined,
-      productPricing: undefined,
-      bowlOrSmoothieAssembly: undefined,
+      qualityOfService: "",
+      productVariety: "",
+      productPricing: "",
+      bowlOrSmoothieAssembly: "",
       improvementSuggestions: "",
       recommendationScore: "",
     },
