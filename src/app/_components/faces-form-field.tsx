@@ -29,19 +29,9 @@ interface FacesFormFieldProps<T extends FieldValues> {
 
 const Radios = [
   {
-    icon: VeryGood,
-    value: "5",
-    label: "Muito Bom",
-  },
-  {
-    icon: Good,
-    value: "4",
-    label: "Bom",
-  },
-  {
-    icon: Normal,
-    value: "3",
-    label: "Regular",
+    icon: VeryBad,
+    value: "1",
+    label: "Muito Ruim",
   },
   {
     icon: Bad,
@@ -49,9 +39,19 @@ const Radios = [
     label: "Ruim",
   },
   {
-    icon: VeryBad,
-    value: "1",
-    label: "Muito Ruim",
+    icon: Normal,
+    value: "3",
+    label: "Regular",
+  },
+  {
+    icon: Good,
+    value: "4",
+    label: "Bom",
+  },
+  {
+    icon: VeryGood,
+    value: "5",
+    label: "Muito Bom",
   },
 ];
 

@@ -1,3 +1,5 @@
+import { SurveyDashboard } from "./_components/dashboard";
+
 export default function Page() {
-  return <>admin</>;
+  return <SurveyDashboard />;
 }
