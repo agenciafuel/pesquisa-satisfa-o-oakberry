@@ -62,16 +62,16 @@ export const authConfig = {
         ...session.user,
       },
     }),
-    // async signIn({ user }) {
-    //   if (
-    //     user?.email?.endsWith("@oakberry.com") ||
-    //     user?.email?.endsWith("@agenciafuel.com.br")
-    //   ) {
-    //     return true;
-    //   } else {
-    //     return false;
-    //   }
-    // },
+    async signIn({ user }) {
+      if (
+        user?.email?.endsWith("@oakberry.com") ||
+        user?.email?.endsWith("@agenciafuel.com.br")
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     authorized: async ({ auth }) => {
       return !!auth
     },
