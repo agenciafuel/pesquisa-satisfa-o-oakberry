@@ -13,22 +13,22 @@ import {
 import { motion } from "motion/react";
 import { NoSurvey } from "../_components/no-survey";
 
-type SurveyParams = Promise<{ id_venda: string | undefined }>;
+type SurveyParams = Promise<{ uuidVenda: string | undefined }>;
 
 export default async function Home({
   searchParams,
 }: {
   searchParams: SurveyParams;
 }) {
-  const { id_venda } = await searchParams;
+  const { uuidVenda } = await searchParams;
 
   return (
     <HydrateClient>
       <Header />
       <main className="flex min-h-[calc(100vh-500px)] flex-col items-center justify-center bg-offWhite-500 py-10">
-        {id_venda?.trim() ? (
+        {uuidVenda?.trim() ? (
           <section className="w-10/12 max-w-7xl space-y-12">
-            <Form orderId={id_venda} />
+            <Form orderId={uuidVenda} />
           </section>
         ) : (
           <section className="w-10/12 max-w-7xl">
