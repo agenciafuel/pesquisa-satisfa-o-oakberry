@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/chart";
 import { Tooltip } from "@/components/ui/tooltip";
 import { api } from "@/trpc/react";
-import { type SurveyData } from "@/types/survey-data";
 import {
   Bar,
   BarChart,
@@ -32,13 +31,29 @@ import {
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+interface SurveyData {
+  recommendationScore: string;
+  qualityOfService: string;
+  productVariety: string;
+  productPricing: string;
+  bowlOrSmoothieAssembly: string;
+  improvementSuggestions: string;
+}
+
+// Definindo tipos mais específicos para o CustomTooltip
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: { name: string; value: number; fill?: string; stroke?: string }[];
+  label?: string;
+}
+
+const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
   if (active && payload?.length) {
     return (
       <div className="rounded border bg-white p-4 shadow-lg">
         <p className="label font-bold">{`${label}`}</p>
-        {payload.map((pld: any, index: number) => (
-          <p key={index} style={{ color: pld.fill || pld.stroke }}>
+        {payload.map((pld, index) => (
+          <p key={index} style={{ color: pld.fill ?? pld.stroke }}>
             {`${pld.name}: ${pld.value}`}
           </p>
         ))}
@@ -59,7 +74,7 @@ export function SurveyDashboard() {
     return Object.entries(
       surveyData.reduce(
         (acc, survey) => {
-          const value = survey[attribute] as string;
+          const value = survey[attribute];
           acc[value] = (acc[value] ?? 0) + 1;
           return acc;
         },
@@ -110,7 +125,7 @@ export function SurveyDashboard() {
                     />
                   ))}
                 </Pie>
-                <Tooltip content={<CustomTooltip />} />
+                <CustomTooltip />
                 <Legend />
               </PieChart>
             </ResponsiveContainer>
@@ -132,7 +147,7 @@ export function SurveyDashboard() {
                 <BarChart data={qualityOfServiceData}>
                   <XAxis dataKey="name" />
                   <YAxis />
-                  <Tooltip content={<CustomTooltip />} />
+                  <CustomTooltip />
                   <Legend />
                   <Bar dataKey="value" fill="#8884d8" />
                 </BarChart>
@@ -154,7 +169,7 @@ export function SurveyDashboard() {
                 <BarChart data={productVarietyData}>
                   <XAxis dataKey="name" />
                   <YAxis />
-                  <Tooltip content={<CustomTooltip />} />
+                  <CustomTooltip />
                   <Legend />
                   <Bar dataKey="value" fill="#82ca9d" />
                 </BarChart>
@@ -176,7 +191,7 @@ export function SurveyDashboard() {
                 <BarChart data={productPricingData}>
                   <XAxis dataKey="name" />
                   <YAxis />
-                  <Tooltip content={<CustomTooltip />} />
+                  <CustomTooltip />
                   <Legend />
                   <Bar dataKey="value" fill="#8884d8" />
                 </BarChart>
@@ -198,7 +213,7 @@ export function SurveyDashboard() {
                 <BarChart data={bowlOrSmoothieAssemblyData}>
                   <XAxis dataKey="name" />
                   <YAxis />
-                  <Tooltip content={<CustomTooltip />} />
+                  <CustomTooltip />
                   <Legend />
                   <Bar dataKey="value" fill="#82ca9d" />
                 </BarChart>
