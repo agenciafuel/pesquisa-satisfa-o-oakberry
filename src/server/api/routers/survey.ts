@@ -7,7 +7,7 @@ import {
 } from "@/server/api/trpc";
 import { env } from "@/env";
 
-const baseUrl = "https://teste.unikasistemas.com/api/";
+const baseUrl = env.UNIKA_API_URL;
 
 const CLIENT_ID = env.CLIENT_ID;
 const CLIENT_SECRET = env.CLIENT_SECRET;
