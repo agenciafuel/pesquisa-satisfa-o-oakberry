@@ -7,12 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
-import { Tooltip } from "@/components/ui/tooltip";
+
 import { api } from "@/trpc/react";
 import {
   Bar,
